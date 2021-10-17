@@ -11,6 +11,8 @@ import com.example.springrest.util.JwtTokenUtil;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -32,10 +34,12 @@ public class UserEndpoint {
 
     private final ModelMapper mapper;
 
+    @Autowired
+    private ApplicationContext context;
 
     @PostMapping("/users/auth")
     public ResponseEntity<?> auth(@RequestBody UserAuthDto userAuthDto) {
-        Optional<User> byEmail = userRepository.findByEmail(userAuthDto.getEmail());
+        Optional<User> byEmail = this.userRepository.findByEmail(userAuthDto.getEmail());
         if (byEmail.isEmpty()) {
             return ResponseEntity
                     .status(HttpStatus.UNAUTHORIZED)
